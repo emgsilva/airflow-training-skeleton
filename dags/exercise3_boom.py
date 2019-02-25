@@ -12,18 +12,6 @@ dag = DAG(
     schedule_interval="0 0 * * *",
 )
 
-
-def print_weekday(execution_date, **context):
-    print(execution_date.strftime("%a"))
-
-
-print_weekday = PythonOperator(
-    task_id="print_weekday",
-    python_callable=print_weekday,
-    provide_context=True,
-    dag=dag,
-)
-
 # Definition of who is emailed on which weekday
 weekday_person_to_email = {
     0: "Bob",  # Monday
@@ -40,12 +28,20 @@ def print_weekday(execution_date, **context):
     return weekday_person_to_email[execution_date.weekday()]
 
 
-email_branching = BranchPythonOperator(
-    task_id="email_branching",
-    dag=dag,
-    python_callable=print_weekday)
+print_weekday = PythonOperator(
+    task_id="print_weekday",
+    python_callable=print_weekday,
+    provide_context=True,
+    dag=dag
+)
+
+# email_branching = BranchPythonOperator(
+#     task_id="email_branching",
+#     dag=dag,
+#     provide_context=True,
+#     python_callable=print_weekday)
 
 # Create a down stream dependency
-print_weekday >> email_branching >> [DummyOperator(task_id=name, dag=dag) for name in list(set(
+print_weekday >> print_weekday >> [DummyOperator(task_id=name, dag=dag) for name in list(set(
     weekday_person_to_email.values()))] >> DummyOperator(
     task_id="join", dag=dag)
