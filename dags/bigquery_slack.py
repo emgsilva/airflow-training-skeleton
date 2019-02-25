@@ -19,7 +19,7 @@ bq_query = "select committer.name, count(*) as number \
         from [bigquery-public-data.github_repos.commits] \
         where date(committer.date) = '{{ ds }}' \
         group by committer.name \
-        order by number asc \
+        order by number desc \
         limit 5"
 
 bq_fetch_data = BigQueryGetDataOperator(
@@ -29,13 +29,14 @@ bq_fetch_data = BigQueryGetDataOperator(
 )
 
 
-def send_to_slack_func(**context):
+def send_to_slack_func(execution_date, **context):
     operator = SlackAPIPostOperator(
         task_id='send_to_slack',
-        text=str(context.get('ti').xcom_pull(key=None, task_ids='bq_fetch_data')),
+        text=str(execution_date + " >> " + context.get('ti').xcom_pull(key=None,
+                                                                task_ids='bq_fetch_data')),
         token=Variable.get('slack_key'),
         # todo: should be passed into a variable from Airflow
-        channel="general"
+        channel="general",
     )
     return operator.execute(context=context)
 
