@@ -36,14 +36,14 @@ weekday_person_to_email = {
 }
 
 
-def print_email(execution_date, **context):
+def print_weekday(execution_date, **context):
     return weekday_person_to_email[execution_date.weekday()]
 
 
 email_branching = BranchPythonOperator(
     task_id="email_branching",
     dag=dag,
-    python_callable=print_email)
+    python_callable=print_weekday)
 
 # Create a down stream dependency
 print_weekday >> email_branching >> [DummyOperator(task_id=name, dag=dag) for name in list(set(
