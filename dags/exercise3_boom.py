@@ -2,6 +2,7 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import BranchPythonOperator, PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 args = {"owner": "godatadriven", "start_date": airflow.utils.dates.days_ago(14)}
 
@@ -49,4 +50,4 @@ email_branching = BranchPythonOperator(
 # Create a down stream dependency
 print_weekday >> email_branching >> [DummyOperator(task_id=name, dag=dag) for name in list(set(
     weekday_person_to_email.values()))] >> DummyOperator(
-    task_id="join", dag=dag)
+    task_id="join", dag=dag, trigger_rule=TriggerRule.ONE_SUCCESS)
