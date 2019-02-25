@@ -37,7 +37,7 @@ weekday_person_to_email = {
 
 
 def print_email(execution_date, **context):
-    print(weekday_person_to_email[execution_date.strftime("%u") - 1])
+    return weekday_person_to_email[execution_date.weekday()]
 
 
 email_branching = BranchPythonOperator(
