@@ -1,5 +1,6 @@
 import airflow
 from airflow import DAG
+from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.slack_operator import SlackAPIPostOperator
 
@@ -16,13 +17,14 @@ dag = DAG(
 
 bq_query = "select committer.name, count(*) as number \
         from [bigquery-public-data.github_repos.commits] \
-        where date(committer.date) = `{{ ds }}` \
+        where date(committer.date) = '{{ ds }}' \
         group by committer.name \
         order by number asc \
         limit 5"
 
 bq_fetch_data = BigQueryGetDataOperator(
     task_id='bq_fetch_data',
+
     sql=bq_query,
     dag=dag
 )
@@ -33,7 +35,7 @@ def send_to_slack_func(**context):
         task_id='send_to_slack',
         text=str(context['return_value']),
         # todo: should be passed into a variable from Airflow
-        token="xoxp-559854890739-559228586160-561116849751-2c717700dd7b7a197765ac21770c9c08",
+        token=Variable.get('slack_key'),
         # todo: should be passed into a variable from Airflow
         channel="General"
     )
