@@ -32,8 +32,8 @@ bq_fetch_data = BigQueryGetDataOperator(
 def send_to_slack_func(**context):
     operator = SlackAPIPostOperator(
         task_id='send_to_slack',
-        text=str(" {{ds}} >> " + context.get('ti').xcom_pull(key=None,
-                                                                task_ids='bq_fetch_data')),
+        text="{{ds}} >> " + str(context.get('ti').xcom_pull(key=None,
+                                                             task_ids='bq_fetch_data')),
         token=Variable.get('slack_key'),
         # todo: should be passed into a variable from Airflow
         channel="general",
