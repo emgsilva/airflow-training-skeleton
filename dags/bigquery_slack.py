@@ -35,7 +35,7 @@ def send_to_slack_func(**context):
         text=str(context.get('ti').xcom_pull(key=None, task_ids='bq_fetch_data')),
         token=Variable.get('slack_key'),
         # todo: should be passed into a variable from Airflow
-        channel="General"
+        channel="general"
     )
     return operator.execute(context=context)
 
