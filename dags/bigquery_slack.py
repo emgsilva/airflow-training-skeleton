@@ -10,7 +10,7 @@ dag = DAG(
     schedule_interval='@daily',
     default_args={
         'owner': 'GoDataDriven',
-        'start_date': airflow.utils.dates.days.ago(2)
+        'start_date': airflow.utils.dates.days_ago(2)
     }
 )
 
