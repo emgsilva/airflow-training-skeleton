@@ -49,7 +49,7 @@ email_branching = BranchPythonOperator(
 
 def all_possible_paths():
     for weekday in weekday_person_to_email:
-        return DummyOperator(task_id="email_"+weekday_person_to_email.get(weekday), dag=dag)
+        DummyOperator(task_id="email_"+weekday_person_to_email.get(weekday), dag=dag)
 
 
 # Create a down stream dependency
