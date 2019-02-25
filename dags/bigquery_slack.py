@@ -1,8 +1,6 @@
 import airflow
 from airflow import DAG
-from datetime import datetime
 from airflow.operators.python_operator import PythonOperator
-from airflow.models import Variable
 from airflow.operators.slack_operator import, SlackAPIPostOperator
 
 from bigquery_get_data import BigQueryGetDataOperator
