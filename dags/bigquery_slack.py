@@ -24,7 +24,6 @@ bq_query = "select committer.name, count(*) as number \
 
 bq_fetch_data = BigQueryGetDataOperator(
     task_id='bq_fetch_data',
-
     sql=bq_query,
     dag=dag
 )
@@ -33,8 +32,7 @@ bq_fetch_data = BigQueryGetDataOperator(
 def send_to_slack_func(**context):
     operator = SlackAPIPostOperator(
         task_id='send_to_slack',
-        text=str(context['return_value']),
-        # todo: should be passed into a variable from Airflow
+        text=str(context.get('ti').xpull(key=None, task_ids='bq_fetch_data')),
         token=Variable.get('slack_key'),
         # todo: should be passed into a variable from Airflow
         channel="General"
