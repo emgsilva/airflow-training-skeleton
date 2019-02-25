@@ -8,7 +8,7 @@ from airflow.operators.slack_operator import, SlackAPIPostOperator
 from bigquery_get_data import BigQueryGetDataOperator
 
 dag = DAG(
-    dag_id='godatafest',
+    dag_id='bqslack',
     schedule_interval='@daily',
     default_args={
         'owner': 'GoDataDriven',
