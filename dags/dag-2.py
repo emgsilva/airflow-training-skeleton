@@ -5,7 +5,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dummy_operator import DummyOperator
 
 dag = DAG(
-    dag_id="p",
+    dag_id="exercise-1",
     default_args={
         "owner": "godatadriven",
         "start_date": airflow.utils.dates.days_ago(3),
