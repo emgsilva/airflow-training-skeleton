@@ -17,14 +17,14 @@ class HttpToGcsOperator(BaseOperator):
     :type gcs_path: string
     """
 
-    template_fields = ('endpoint',)
+    template_fields = ('endpoint', 'filename')
     template_ext = ()
     ui_color = '#f4a460'
 
     @apply_defaults
     def __init__(self,
                  endpoint,
-                 gcs_path,
+                 filename,
                  bucket,
                  http_conn_id="currency_con",
                  google_cloud_storage_conn_id="google_cloud_default",
@@ -33,7 +33,7 @@ class HttpToGcsOperator(BaseOperator):
         super(HttpToGcsOperator, self).__init__(*args, **kwargs)
         self.http_conn_id = http_conn_id
         self.endpoint = endpoint
-        self.gcs_path = gcs_path
+        self.filename = filename
         self.google_cloud_storage_conn_id = google_cloud_storage_conn_id
         self.bucket = bucket
         self.delegate_to = delegate_to
@@ -56,5 +56,5 @@ class HttpToGcsOperator(BaseOperator):
         hook.upload(bucket=self.bucket,
                     object=io.BytesIO(file_to_upload.content).read().decode(
                         'UTF-8'),
-                    filename=self.gcs_path,
+                    filename=self.filename,
                     mime_type="application/json")
