@@ -27,7 +27,7 @@ pgsl_to_gcs = PostgresToGoogleCloudStorageOperator(
 http_to_gcs_op = HttpToGcsOperator(
     task_id="http_to_gcs_op",
     http_conn_id="currency_con",
-    endpoint="date={{ds}}&from=GBP&to=EUR",
+    endpoint="convert-currency?date={{ds}}&from=GBP&to=EUR",
     gcs_path=Variable.get('gs_bucket'),
     delegate_to=None,
     bucket=Variable.get('gs_bucket'),
