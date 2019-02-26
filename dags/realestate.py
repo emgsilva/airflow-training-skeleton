@@ -30,7 +30,7 @@ http_to_gcs_op = HttpToGcsOperator(
     endpoint="convert-currency?date={{ds}}&from=GBP&to=EUR",
     filename="currency/{{ds}}/dates.json",
     delegate_to=None,
-    bucket=Variable.get('gs_bucket'),
+    gs_bucket=Variable.get('gs_bucket'),
     dag=dag,
 )
 
