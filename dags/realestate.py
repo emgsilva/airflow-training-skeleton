@@ -11,6 +11,7 @@ from airflow.contrib.operators.dataproc_operator import (
     DataprocClusterDeleteOperator,
     DataProcPySparkOperator,
 )
+import os
 
 args = {"owner": "godatadriven", "start_date": airflow.utils.dates.days_ago(4)}
 
@@ -48,7 +49,7 @@ def upload_file(bucket, filepath):
     hook.upload(
         bucket=bucket,
         object=filepath,
-        filename="dags/airflow_training/pyspark/build_statistics.py"
+        filename=os.path.abspath("dags/airflow_training/pyspark/build_statistics.py")
     )
 
 
