@@ -104,7 +104,6 @@ load_into_bigquery = DataFlowPythonOperator(
     dag=dag,
 )
 
+[pgsl_to_gcs, http_to_gcs_op] >> load_into_bigquery
 [pgsl_to_gcs,
- http_to_gcs_op] >> [load_into_bigquery, dataproc_create_cluster]
-
-dataproc_create_cluster >> compute_aggregates >> dataproc_delete_cluster
+ http_to_gcs_op] >> dataproc_create_cluster >> compute_aggregates >> dataproc_delete_cluster
