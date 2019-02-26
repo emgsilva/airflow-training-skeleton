@@ -32,11 +32,8 @@ def run(argv=None):
     known_args, pipeline_args = parser.parse_known_args(argv)
     pipeline_args.extend(
         [
-            "--runner=DataflowRunner",
-            "--project=airflowbolcom-fc205e26bebb44fa",
             "--staging_location=gs://airflow-emgsilva/dataflow-staging",
-            "--temp_location=gs://airflow-emgsilva/dataflow-temp",
-            "--job_name=gcs-gzcomp-to-bq1",
+            "--temp_location=gs://airflow-emgsilva/dataflow-temp"
         ]
     )
     pipeline_options = PipelineOptions(pipeline_args)
