@@ -50,7 +50,7 @@ def upload_file(bucket, filepath):
         bucket=bucket,
         object=filepath,
         filename=os.path.dirname(
-            os.path.realpath("dags/airflow_training/pyspark/build_statistics.py"))
+            os.path.realpath("dags/airflow_training/pyspark/")) + "/build_statistics.py"
     )
 
 
