@@ -33,8 +33,7 @@ print_weekday = PythonOperator(
     task_id="print_weekday",
     python_callable=print_weekday,
     provide_context=True,
-    dag=dag
-)
+    dag=dag)
 
 
 def email_branching(execution_date, **context):
