@@ -48,7 +48,7 @@ def upload_file(bucket, filepath):
     hook.upload(
         bucket=bucket,
         object=filepath,
-        filename="pyspark/build_statistics.py"
+        filename="airflow_training/pyspark/build_statistics.py"
     )
 
 
