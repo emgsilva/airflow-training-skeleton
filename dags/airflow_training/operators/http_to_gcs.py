@@ -17,7 +17,7 @@ class HttpToGcsOperator(BaseOperator):
     :type gcs_path: string
     """
 
-    template_fields = ('endpoint')
+    template_fields = ('endpoint',)
     template_ext = ()
     ui_color = '#f4a460'
 
@@ -25,15 +25,17 @@ class HttpToGcsOperator(BaseOperator):
     def __init__(self,
                  endpoint,
                  gcs_path,
+                 bucket,
                  http_conn_id="currency_con",
                  google_cloud_storage_conn_id="google_cloud_default",
                  delegate_to=None,
                  *args, **kwargs):
         super(HttpToGcsOperator, self).__init__(*args, **kwargs)
-        self.http_conn_id = http_conn_id,
-        self.endpoint = endpoint,
+        self.http_conn_id = http_conn_id
+        self.endpoint = endpoint
         self.gcs_path = gcs_path
-        self.google_cloud_storage_conn_id = google_cloud_storage_conn_id,
+        self.google_cloud_storage_conn_id = google_cloud_storage_conn_id
+        self.bucket = bucket
         self.delegate_to = delegate_to
 
     def execute(self, context):
@@ -51,5 +53,5 @@ class HttpToGcsOperator(BaseOperator):
             google_cloud_storage_conn_id=self.google_cloud_storage_conn_id,
             delegate_to=self.delegate_to,
         )
-        hook.upload(self.bucket, object, self.gcs_path + io.BytesIO(file_to_upload), \
+        hook.upload(self.bucket, self.gcs_path + io.BytesIO(file_to_upload), \
                     "application/json")
