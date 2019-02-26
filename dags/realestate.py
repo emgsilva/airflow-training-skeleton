@@ -3,6 +3,7 @@ from airflow.models import DAG
 from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_training.operators.postgres_to_gcs import PostgresToGoogleCloudStorageOperator
+from airflow_training.operators.http_to_gcs import HttpToGcsOperator
 
 args = {"owner": "godatadriven", "start_date": airflow.utils.dates.days_ago(4)}
 
@@ -23,4 +24,13 @@ pgsl_to_gcs = PostgresToGoogleCloudStorageOperator(
     dag=dag,
 )
 
-pgsl_to_gcs
+http_to_gcs = HttpToGcsOperator(
+    task_id="http_to_gcs",
+    http_conn_id="currency_con",
+    endpoint="date={{ds}}&from=GBP&to=EUR",
+    gcs_path=Variable.get('gs_bucket'),
+    delegate_to=None,
+    dag=dag,
+)
+
+[pgsl_to_gcs, http_to_gcs]
