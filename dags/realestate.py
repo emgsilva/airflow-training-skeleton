@@ -24,8 +24,8 @@ pgsl_to_gcs = PostgresToGoogleCloudStorageOperator(
     dag=dag,
 )
 
-http_to_gcs = HttpToGcsOperator(
-    task_id="http_to_gcs",
+http_to_gcs_op = HttpToGcsOperator(
+    task_id="http_to_gcs_op",
     http_conn_id="currency_con",
     endpoint="date={{ds}}&from=GBP&to=EUR",
     gcs_path=Variable.get('gs_bucket'),
@@ -33,4 +33,4 @@ http_to_gcs = HttpToGcsOperator(
     dag=dag,
 )
 
-[pgsl_to_gcs, http_to_gcs]
+[pgsl_to_gcs, http_to_gcs_op]
