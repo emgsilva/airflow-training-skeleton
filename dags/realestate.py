@@ -30,7 +30,7 @@ http_to_gcs_op = HttpToGcsOperator(
     endpoint="date={{ds}}&from=GBP&to=EUR",
     gcs_path=Variable.get('gs_bucket'),
     delegate_to=None,
-    bucket=Variable('gs_bucket'),
+    bucket=Variable.get('gs_bucket'),
     dag=dag,
 )
 
