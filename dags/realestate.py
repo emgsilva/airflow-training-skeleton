@@ -49,7 +49,7 @@ def upload_file(bucket, filepath):
     hook.upload(
         bucket=bucket,
         object=filepath,
-        filename=os.path.abspath("dags/airflow_training/pyspark/build_statistics.py")
+        filename=os.path.abspath("pyspark/build_statistics.py")
     )
 
 
