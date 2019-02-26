@@ -2,6 +2,7 @@ import airflow
 from airflow.contrib.hooks.gcs_hook import GoogleCloudStorageHook
 from airflow.models import DAG
 from airflow.models import Variable
+from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_training.operators.postgres_to_gcs import PostgresToGoogleCloudStorageOperator
 from airflow_training.operators.http_to_gcs import HttpToGcsOperator
