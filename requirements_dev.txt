@@ -1,3 +1,4 @@
 flake8
 pytest==3.9.2
 pyspark-stubs
+apache-beam
