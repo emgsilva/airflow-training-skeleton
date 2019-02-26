@@ -54,6 +54,7 @@ class HttpToGcsOperator(BaseOperator):
             delegate_to=self.delegate_to,
         )
         hook.upload(bucket=self.bucket,
-                    filename=self.gcs_path + io.BytesIO(file_to_upload.content).read().decode(
+                    object= + io.BytesIO(file_to_upload.content).read().decode(
                         'UTF-8'),
+                    filename=self.gcs_path,
                     mime_type="application/json")
