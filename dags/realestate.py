@@ -15,11 +15,11 @@ dag = DAG(
 
 pgsl_to_gcs = PostgresToGoogleCloudStorageOperator(
     task_id="pgsl_to_gcs",
-    # uses a connection
+    # uses a connection from Airflow - which contains the credentials necessary to access pgsl
     postgres_conn_id="postgres_con",
     sql="SELECT * FROM land_registry_price_paid_uk WHERE transfer_date = '{{ ds }}'",
     bucket=Variable.get('gs_bucket'),
-    filename="input_data/{{ds}}/data.json",
+    filename="land_registry_price/{{ds}}/data.json",
     dag=dag,
 )
 
