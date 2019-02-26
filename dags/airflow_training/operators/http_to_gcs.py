@@ -51,5 +51,5 @@ class HttpToGcsOperator(BaseOperator):
             google_cloud_storage_conn_id=self.google_cloud_storage_conn_id,
             delegate_to=self.delegate_to,
         )
-        hook.upload(self.bucket, object, "currency/{{ds}}" + io.BytesIO(file_to_upload), \
+        hook.upload(self.bucket, object, self.gcs_path + io.BytesIO(file_to_upload), \
                     "application/json")
