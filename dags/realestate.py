@@ -91,7 +91,7 @@ load_into_bigquery = DataFlowPythonOperator(
     task_id="land_registry_prices_to_bigquery",
     dataflow_default_options={
         'region': "europe-west1",
-        'input': "gs://" + Variable.get('gs_bucket') + "/land_registry_price/{{ ds }}/*.json",
+        'input': "gs://airflow-emgsilva/land_registry_price/{{ ds }}/*.json",
         'table': 'emgsilva',
         'dataset': 'emgsilva',
         'project': 'airflowbolcom-fc205e26bebb44fa',
