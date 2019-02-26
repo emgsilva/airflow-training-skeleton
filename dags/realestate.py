@@ -1,5 +1,6 @@
 import airflow
 from airflow.contrib.hooks.gcs_hook import GoogleCloudStorageHook
+from airflow.contrib.operators.dataflow_operator import DataFlowPythonOperator
 from airflow.models import DAG
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
@@ -88,5 +89,21 @@ dataproc_delete_cluster = DataprocClusterDeleteOperator(
     dag=dag,
 )
 
+load_into_bigquery = DataFlowPythonOperator(
+    task_id="land_registry_prices_to_bigquery",
+    dataflow_default_options={
+        'region': "europe-west1-c",
+        'input': "gs://" + Variable.get('gs_bucket') + "/land_registry_price/{{ ds }}/*.json",
+        'table': 'emgsilva',
+        'dataset': 'emgsilva',
+        'project': 'airflowbolcom-fc205e26bebb44fa',
+        'bucket': 'europe-west1-training-airfl-46f2603e-bucket',
+        'name': '{{ task_instance_key_str }}'
+    },
+    py_file="gs://europe-west1-training-airfl-46f2603e-bucket/dags/dataflow_job.py",
+    dag=dag,
+)
+
 [pgsl_to_gcs,
- http_to_gcs_op] >> dataproc_create_cluster >> compute_aggregates >> dataproc_delete_cluster
+ http_to_gcs_op] >> [dataproc_create_cluster >> compute_aggregates >> dataproc_delete_cluster,
+                     load_into_bigquery]
