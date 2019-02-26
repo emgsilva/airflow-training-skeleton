@@ -11,7 +11,6 @@ from airflow.contrib.operators.dataproc_operator import (
     DataprocClusterDeleteOperator,
     DataProcPySparkOperator,
 )
-import os
 
 args = {"owner": "godatadriven", "start_date": airflow.utils.dates.days_ago(4)}
 
@@ -42,23 +41,22 @@ http_to_gcs_op = HttpToGcsOperator(
     dag=dag,
 )
 
+# def upload_file(bucket, filepath):
+#     hook = GoogleCloudStorageHook(
+#         google_cloud_storage_conn_id="google_cloud_default")
+#     hook.upload(
+#         bucket=bucket,
+#         object=filepath,
+#         filename="gs://europe-west1-training-airfl-46f2603e-bucket/dags/build_statistics.py"
+#     )
 
-def upload_file(bucket, filepath):
-    hook = GoogleCloudStorageHook(
-        google_cloud_storage_conn_id="google_cloud_default")
-    hook.upload(
-        bucket=bucket,
-        object=filepath,
-        filename="gs://europe-west1-training-airfl-46f2603e-bucket/dags/build_statistics.py"
-    )
 
-
-upload_build_statistics = PythonOperator(
-    task_id="upload_build_statistics",
-    python_callable=upload_file(bucket=Variable.get('gs_bucket'),
-                                filepath="pyspark/build_statistics.py"),
-    provide_context=True,
-    dag=dag, )
+# upload_build_statistics = PythonOperator(
+#     task_id="upload_build_statistics",
+#     python_callable=upload_file(bucket=Variable.get('gs_bucket'),
+#                                 filepath="pyspark/build_statistics.py"),
+#     provide_context=True,
+#     dag=dag, )
 
 dataproc_create_cluster = DataprocClusterCreateOperator(
     task_id="create_dataproc",
@@ -72,7 +70,7 @@ dataproc_create_cluster = DataprocClusterCreateOperator(
 compute_aggregates = DataProcPySparkOperator(
     task_id='compute_aggregates',
     # TODO: create operator to upload localfile "build_statistics.py"
-    main="gs://" + Variable.get('gs_bucket') + "/pyspark/build_statistics.py",
+    main="gs://europe-west1-training-airfl-46f2603e-bucket/dags/build_statistics.py",
     cluster_name='analyse-pricing-{{ ds }}',
     arguments=[
         "gs://" + Variable.get('gs_bucket') + "/land_registry_price/{{ ds }}/*.json",
@@ -91,5 +89,4 @@ dataproc_delete_cluster = DataprocClusterDeleteOperator(
 )
 
 [pgsl_to_gcs,
- http_to_gcs_op] >> upload_build_statistics >> dataproc_create_cluster >> compute_aggregates >> \
-dataproc_delete_cluster
+ http_to_gcs_op] >> dataproc_create_cluster >> compute_aggregates >> dataproc_delete_cluster
