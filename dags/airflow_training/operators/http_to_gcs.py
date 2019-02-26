@@ -53,6 +53,7 @@ class HttpToGcsOperator(BaseOperator):
             google_cloud_storage_conn_id=self.google_cloud_storage_conn_id,
             delegate_to=self.delegate_to,
         )
-        hook.upload(self.bucket, self.gcs_path + io.BytesIO(file_to_upload.content).read(
-
-        ).decode('UTF-8'), "application/json")
+        hook.upload(bucket=self.bucket,
+                    filename=self.gcs_path + io.BytesIO(file_to_upload.content).read().decode(
+                        'UTF-8'),
+                    mime_type="application/json")
